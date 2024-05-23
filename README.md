@@ -2,6 +2,7 @@
 
 Confuddlement is a command-line tool that downloads Confluence pages and saves them as Markdown files.
 It uses the Confluence REST API to fetch page content and convert it to Markdown.
+The program can also summarise the content of a fetched page using the Ollama API.
 
 ```plain
 $ go run ./main.go
@@ -22,6 +23,18 @@ Painful Change Management
 Illogical Diagrams
 Saved page ./confluence_dump/Painful Change Management.md
 Saved page Illogical Diagrams to ./confluence_dump/Ilogical Diagrams.md
+
+Done!
+
+$ go run ./main.go summarise
+Select a file to summarise:
+0: + COOLTEAM - Feature List
+1: + Painful Change Management
+2: + Illogical Diagrams
+Enter the number of the file to summarise: 1
+
+Summarising Painful Change Management...
+"Change management in the enterprise is painful and slow. It involves many forms and approvals."
 ```
 
 ## Usage
@@ -31,6 +44,12 @@ Saved page Illogical Diagrams to ./confluence_dump/Ilogical Diagrams.md
 1. Copy [.env.template](.env.template) to `.env` and update the environment variables.
 2. Run the program using the command `go run main.go` or build the program using the command `go build` and run the resulting executable.
 3. The program will fetch Confluence pages and save them as Markdown files in the specified directory.
+
+You can also summarise the content of a fetched page using the Ollama API by running the program with the `summarise` argument:
+
+```shell
+go run ./main.go summarise
+```
 
 ### Environment Variables
 
@@ -46,6 +65,8 @@ The following environment must be set:
 * `MIN_PAGE_LENGTH`: The minimum length of a page to be considered valid.
 * `SKIP_FETCHED_PAGES`: Set to `true` to skip pages that have already been fetched.
 * `DEBUG`: Set to `true` to enable debug logging.
+* `OLLAMA_HOST`: The host of the Ollama API (optional, only required for summarisation).
+* `OLLAMA_MODEL`: The model to use for summarisation (optional, only required for summarisation).
 
 ## License
 
