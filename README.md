@@ -55,18 +55,20 @@ go run ./main.go summarise
 
 The following environment must be set:
 
-* `CONFLUENCE_DUMP_DIR`: The directory where the Markdown files will be saved.
-* `CONFLUENCE_LIMIT`: The number of pages to fetch per API request.
-* `CONFLUENCE_BASE_URL`: The base URL of the Confluence instance.
-* `CONFLUENCE_USER`: The username to use for API authentication.
-* `CONFLUENCE_SPACES`: The space keys to fetch pages from, separated by commas.
-* `CONFLUENCE_API_TOKEN`: The API token to use for authentication.
-* `DELETE_PREVIOUS_DUMP`: Set to `true` to delete the previous dump directory (and state) before fetching pages.
-* `MIN_PAGE_LENGTH`: The minimum length of a page to be considered valid.
-* `SKIP_FETCHED_PAGES`: Set to `true` to skip pages that have already been fetched.
-* `DEBUG`: Set to `true` to enable debug logging.
-* `OLLAMA_HOST`: The host of the Ollama API (optional, only required for summarisation).
-* `OLLAMA_MODEL`: The model to use for summarisation (optional, only required for summarisation).
+> - `CONFLUENCE_DUMP_DIR`: The directory where the Markdown files will be saved.
+> - `CONFLUENCE_LIMIT`: The number of pages to fetch per API request.
+> - `CONFLUENCE_BASE_URL`: The base URL of the Confluence instance.
+> - `CONFLUENCE_USER`: The username to use for API authentication.
+> - `CONFLUENCE_SPACES`: The space keys to fetch pages from, separated by commas.
+> - `CONFLUENCE_API_TOKEN`: The API token to use for authentication.
+> - `DELETE_PREVIOUS_DUMP`: Set to `true` to delete the previous dump directory (and state) before fetching pages.
+> - `MIN_PAGE_LENGTH`: The minimum length of a page to be considered valid.
+> - `SKIP_FETCHED_PAGES`: Set to `true` to skip pages that have already been fetched.
+> - `DEBUG`: Set to `true` to enable debug logging.
+> - `OLLAMA_HOST`: The host of the Ollama API (optional, only required for summarisation).
+> - `OLLAMA_MODEL`: The model to use for summarisation (optional, only required for summarisation).
+> - `OLLAMA_NUM_CTX`: The number of context sentences to include in the summary (optional, only required for summarisation).
+> - `OLLAMA_NUM_PREDICT`: The number of predicted sentences to include in the summary (optional, only required for summarisation).
 
 ## License
 
