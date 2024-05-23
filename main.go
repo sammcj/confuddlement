@@ -74,7 +74,7 @@ type FetchContentResponse struct {
 }
 
 func main() {
-	version := "0.3.0"
+	version := "0.3.1"
 	fmt.Printf("Confuddlement %s\n", version)
 
 	loadEnvVars()
@@ -514,7 +514,7 @@ func cleanupMarkdownFiles() {
 	}
 }
 
-func fileSelector(){
+func fileSelector() {
 	// provide a list of files, let the user select one, and then summarise it
 	files, err := os.ReadDir(getEnv("CONFLUENCE_DUMP_DIR"))
 	if err != nil {
@@ -565,9 +565,27 @@ func summarise(prompt string) {
 	}
 
 	ctx := context.Background()
+
+	numCtx, err := strconv.Atoi(getEnv("OLLAMA_NUM_CTX"))
+	if err != nil {
+		numCtx = 2048
+		fmt.Println("OLLAMA_NUM_CTX not set, defaulting to 2048")
+	}
+
+	num_predict, err := strconv.Atoi(getEnv("OLLAMA_NUM_PREDICT"))
+	if err != nil {
+		num_predict = -1
+		fmt.Println("OLLAMA_NUM_PREDICT not set, defaulting to -1")
+	}
+
 	req := &api.ChatRequest{
 		Model:    getEnv("OLLAMA_MODEL"),
 		Messages: messages,
+		Options: map[string]interface{}{
+			// parse the dotenv envs as integers
+			"num_predict": num_predict,
+			"num_ctx":     numCtx,
+		},
 	}
 
 	respFunc := func(resp api.ChatResponse) error {

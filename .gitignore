@@ -1,6 +1,6 @@
 .vscode
 .env
-confluence_dump/
+confluence_dump*
 ./confuddlement
 **/*.tmp
 **/*.log
