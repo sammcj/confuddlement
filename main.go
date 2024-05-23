@@ -112,6 +112,12 @@ func main() {
 	search := flag.String("s", "", "search term")
 	rangeVal := flag.String("r", "4", "range of lines to include in the search result")
 
+	// print usage if no arguments are provided
+	if len(os.Args) == 1 {
+		flag.Usage()
+		return
+	}
+
 	flag.Parse()
 
 	if *summarise {
