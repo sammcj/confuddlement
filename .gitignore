@@ -1,0 +1,8 @@
+.vscode
+.env
+confluence_dump/
+./confuddlement
+**/*.tmp
+**/*.log
+**/*.swp
+**/state.json
