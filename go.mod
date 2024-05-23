@@ -1,8 +1,6 @@
 module github.com/sammcj/confuddlement
 
-go 1.22.0
-
-toolchain go1.22.3
+go 1.22.3
 
 require (
 	github.com/JohannesKaufmann/html-to-markdown v1.5.0
