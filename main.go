@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/fs"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -13,6 +15,7 @@ import (
 	md "github.com/JohannesKaufmann/html-to-markdown"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/joho/godotenv"
+	"github.com/ollama/ollama/api"
 )
 
 type ListContentResponse struct {
@@ -71,7 +74,7 @@ type FetchContentResponse struct {
 }
 
 func main() {
-	version := "0.2.0"
+	version := "0.3.0"
 	fmt.Printf("Confuddlement %s\n", version)
 
 	loadEnvVars()
@@ -92,6 +95,12 @@ func main() {
 	base := getEnv("CONFLUENCE_BASE_URL")
 	if base == "" {
 		panic("CONFLUENCE_BASE_URL not set (e.g. https://mycompany.atlassian.net/wiki)")
+	}
+
+	// if the first argument is "summarise", then summarise a file instead of fetching content
+	if len(os.Args) > 1 && os.Args[1] == "summarise" {
+		fileSelector()
+		return
 	}
 
 	if getEnv("DELETE_PREVIOUS_DUMP") == "true" {
@@ -502,5 +511,72 @@ func cleanupMarkdownFiles() {
 		if err != nil {
 			panic(err)
 		}
+	}
+}
+
+func fileSelector(){
+	// provide a list of files, let the user select one, and then summarise it
+	files, err := os.ReadDir(getEnv("CONFLUENCE_DUMP_DIR"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Select a file to summarise:")
+
+	for i, file := range files {
+		fmt.Printf("%d: %s\n", i, file.Name())
+	}
+
+	var selection int
+	fmt.Print("Enter the number of the file to summarise: ")
+	_, err = fmt.Scan(&selection)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	file := files[selection]
+	filePath := fmt.Sprintf("%s/%s", getEnv("CONFLUENCE_DUMP_DIR"), file.Name())
+	fileContent, err := os.ReadFile(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// summarise the file
+	prompt := fmt.Sprintf("Provide a concise summary of the following file %s:\n\n%s", file.Name(), fileContent)
+
+	summarise(prompt)
+}
+
+func summarise(prompt string) {
+	client, err := api.ClientFromEnvironment()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	messages := []api.Message{
+		{
+			Role:    "system",
+			Content: "Provide very brief, concise summaries of the following content.",
+		},
+		{
+			Role:    "user",
+			Content: prompt,
+		},
+	}
+
+	ctx := context.Background()
+	req := &api.ChatRequest{
+		Model:    getEnv("OLLAMA_MODEL"),
+		Messages: messages,
+	}
+
+	respFunc := func(resp api.ChatResponse) error {
+		fmt.Print(resp.Message.Content)
+		return nil
+	}
+
+	err = client.Chat(ctx, req, respFunc)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
