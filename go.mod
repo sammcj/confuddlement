@@ -1,12 +1,12 @@
 module github.com/sammcj/confuddlement
 
-go 1.22.10
+go 1.23.4
 
 require (
-	github.com/JohannesKaufmann/html-to-markdown v1.5.0
-	github.com/PuerkitoBio/goquery v1.9.3
+	github.com/JohannesKaufmann/html-to-markdown v1.6.0
+	github.com/PuerkitoBio/goquery v1.10.0
 	github.com/joho/godotenv v1.5.1
-	github.com/ollama/ollama v0.1.48
+	github.com/ollama/ollama v0.5.2
 )
 
 require (
